@@ -1,5 +1,5 @@
 require('dotenv').config()
-const { Client, IntentsBitField } = require("discord.js")
+const { Client, IntentsBitField } = require('discord.js')
 
 const client = new Client({
   intents: [
@@ -10,22 +10,26 @@ const client = new Client({
   ],
 })
 
-client.on("ready", (c) => {
-    console.log(`${c.user.tag} is online`)
+client.on('ready', (c) => {
+  console.log(`${c.user.tag} is online`)
 })
 
-client.on("messageCreate", (msg) => {
-    if(msg.author.bot){
-        return
-    }
+client.on('messageCreate', (msg) => {
+  if (msg.author.bot) {
+    return
+  }
 
-    if(msg.content === 'Hey') {
-        msg.reply('Hello 🍆')
-    }
+  if (msg.content === 'Hey') {
+    msg.reply('Hello 🍆')
+  }
 })
 
-client.login(
-  process.env.TOKEN
-)
+client.on('interactionCreate', (interaction) => {
+  if (!interaction.isChatInputCommand()) return
 
+  if (interaction.commandName === 'hey') {
+    interaction.reply('Hey!')
+  }
+})
 
+client.login(process.env.TOKEN)
