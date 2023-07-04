@@ -24,6 +24,8 @@ client.on('messageCreate', (msg) => {
   }
 })
 
+//Command /hey
+
 client.on('interactionCreate', (interaction) => {
   if (!interaction.isChatInputCommand()) return
 
@@ -32,4 +34,16 @@ client.on('interactionCreate', (interaction) => {
   }
 })
 
+//End command /hey
+
+client.on('interactionCreate', (interaction) => {
+  if (!interaction.isChatInputCommand()) return
+
+  if (interaction.commandName === 'add') {
+    const num1 = interaction.options.get('first-number')?.value
+    const num2 = interaction.options.get('second-number')?.value
+
+    interaction.reply(`The sum is ${num1 + num2}`)
+  }
+})
 client.login(process.env.TOKEN)
