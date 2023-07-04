@@ -7,43 +7,39 @@ const client = new Client({
     IntentsBitField.Flags.GuildMembers,
     IntentsBitField.Flags.GuildMessages,
     IntentsBitField.Flags.MessageContent,
+    IntentsBitField.Flags.DirectMessages,
+    IntentsBitField.Flags.DirectMessageTyping,
+    IntentsBitField.Flags.GuildInvites,
   ],
 })
 
-client.on('ready', (c) => {
+client.on('ready', async (c) => {
   console.log(`${c.user.tag} is online`)
 })
 
-client.on('messageCreate', (msg) => {
-  if (msg.author.bot) {
-    return
-  }
+// EVERY X BOT
+client.on('ready', async () => {
 
-  if (msg.content === 'Hey') {
-    msg.reply('Hello 🍆')
-  }
-})
+  const targetUserId = '218115318927589397'; // Replace with the actual user ID
+  const messageContent = 'Enter your text here'; // Replace with your desired message
 
-//Command /hey
+  const sendDirectMessage = async () => {
+    try {
+      const user = await client.users.fetch(targetUserId);
+      user.send(messageContent)
+        .then(() => console.log('Direct message sent!'))
+        .catch((error) => console.error('Error sending direct message:', error));
+    } catch (error) {
+      console.error('User not found or error fetching user:', error);
+    }
+  };
 
-client.on('interactionCreate', (interaction) => {
-  if (!interaction.isChatInputCommand()) return
+  // Send the initial direct message
+  sendDirectMessage();
 
-  if (interaction.commandName === 'hey') {
-    interaction.reply('Hey!')
-  }
-})
+  // Schedule sending direct messages every hour (in milliseconds) , Change time as needed
+  setInterval(sendDirectMessage, 60 * 60 * 1000);
 
-//End command /hey
+});
 
-client.on('interactionCreate', (interaction) => {
-  if (!interaction.isChatInputCommand()) return
-
-  if (interaction.commandName === 'add') {
-    const num1 = interaction.options.get('first-number')?.value
-    const num2 = interaction.options.get('second-number')?.value
-
-    interaction.reply(`The sum is ${num1 + num2}`)
-  }
-})
 client.login(process.env.TOKEN)
